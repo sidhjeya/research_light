@@ -1,0 +1,52 @@
+dpkg -l | grep "realsense" | cut -d " " -f 3 | xargs sudo dpkg --purge
+lsusb | grep 8086
+https://github.com/leggedrobotics/realsense-ros-rsl
+https://github.com/leggedrobotics/realsense-ros-rsl
+roslaunch realsense2_camera rs_camera.launch filters:=pointcloud
+git clone https://github.com/ros-perception/pointcloud_to_laserscan.git -b lunar-devel
+PA0 FBF
+PA1 FBB
+PA2 FBCL1
+
+PB15,PB6,PB5,PB13,PB4,PB11,PB9,PB10,PB8,PB7,PB6P,PB5,PB15,PB14
+
+was converting pointcloud to laserscan
+rostopic echo /camera/depth/color/points |grep frame_id
+
+~YOLO WEIGHTS
+https://pjreddie.com/darknet/yolo/
+
+aug 25
+use the link for future refereance
+https://github.com/ultralytics/yolov5#readme
+
+
+s000000+.
+
+/// 
+run_yolov_3
+
+-------------------------------------------------------------------
+IMPORTANT TOOLS
+LabelImg tool [12].
+Dataset was trained with help of PyTorch library [5].
+SORT for object detection
+Hungarian algorithm and Kalman filter are used to track objects. 
+----------------------------------------------------------------------
+sep4 
+need to fuse yolov5_v1.py and research_v2.py into research_v3.py
+
+-----------------------------------------------------------------------
+run yolov5_v2.py
+-----------------------------------------------------------
+https://medium.com/@jithin8mathew/estimating-depth-for-yolov5-object-detection-bounding-boxes-using-intel-realsense-depth-camera-a0be955e579a
+--------------------------------------------------------------------------
+working on selfv1.py and research_v3.py 
+still the blocking problem persists ...run res****3 file and rectify the error becuse the changes made in sel**v1 worked and should work here as well.
+----------------------------------------------------------------------------------
+finalv1.py script is running
+
+problems
+1)distanace after 35cm not coming good
+2)detection not accurate
+3)mapping coming good ,need to add odom to the map
