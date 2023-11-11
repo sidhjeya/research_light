@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <!-- Specify the package and Python script to run -->
+  <node name="rviz" pkg="rviz" type="rviz"/>
+  <node name="testing" pkg="test" type="n10_large_values.py" output="screen"/>
+    <!-- <node name="testingcpp" pkg="test" type="tst" output="screen"/> -->
+<node pkg="tf" type="static_transform_publisher" name="frame_map" args="1 0.0 0.0 0.0 0.0 1  /map /odom 10000" />
+
+
+ </launch>
