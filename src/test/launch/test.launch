@@ -2,9 +2,9 @@
 <launch>
   <!-- Specify the package and Python script to run -->
   <node name="rviz" pkg="rviz" type="rviz"/>
-  <node name="testing" pkg="test" type="width_thread.py" output="screen"/>
-    <node name="testingcpp" pkg="test" type="tst" output="screen"/>
- <!-- <node name="testing" pkg="test" type="searchObstacle.cpp" output="screen"> -->
- <!-- <node type=“rviz” name=“rviz” pkg=“rviz” args=“-d $(find test)/rviz/def.rviz” />  -->
- 
-</launch>
+  <node name="testing" pkg="test" type="n10_large_values.py" output="screen"/>
+    <!-- <node name="testingcpp" pkg="test" type="tst" output="screen"/> -->
+<node pkg="tf" type="static_transform_publisher" name="frame_map" args="1 0.0 0.0 0.0 0.0 1  /map /odom 10000" />
+
+
+ </launch>
