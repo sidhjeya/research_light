@@ -41,15 +41,11 @@ depth_br=0
 bounding_box = [0, 0,0,0]
 mod = np.random.rand(480, 640) * 10
 model = torch.hub.load('ultralytics/yolov5','custom', path='/home/htetro/ree_ws/src/test/src/best_wire1.pt', force_reload=True)
-def camera_if():
-    camera_info = CameraInfo()
-    camera_info.width = 640  
-    camera_info.height = 480 
-    camera_info.distortion_model = 'plumb_bob'
+def dept_frame():
+    frame_id = "depth_optical_frame"
 
- 
-    camera_info.K = [400.0, 0.0, 320.0, 0.0, 400.0, 240.0, 0.0, 0.0, 1.0]
-    camera_info.P = [400.0, 0.0, 320.0, 0.0, 0.0, 400.0, 240.0, 0.0, 0.0, 0.0, 1.0, 0.0]
+
+
 
 def modify_depth_image(depth_image, bounding_box):
    
@@ -69,26 +65,28 @@ def modify_depth_image(depth_image, bounding_box):
 if __name__ == "__main__":
     print("Loading Intel Realsense Camera")
     pipeline = rs.pipeline()
-
     config = rs.config()    
     config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 60)
     config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 60)
-
-
     pipeline.start(config)
     align_to = rs.stream.color
     align = rs.align(align_to)
-    # talker()
-
     pub = rospy.Publisher('chatter', String, queue_size=10)
-    pub_width = rospy.Publisher('chatter_width', String, queue_size=10) 
-    depth_image_publisher = rospy.Publisher('/depth_image', Image, queue_size=10)   
-    camera_info_pub = rospy.Publisher('/camera_info', CameraInfo, queue_size=10)
+    pub_width = rospy.Publisher('/t_chatter_width', String, queue_size=10) 
+    depth_image_publisher = rospy.Publisher('/t_depth_image', Image, queue_size=10)   
+    camera_info_pub = rospy.Publisher('/t_camera_info', CameraInfo, queue_size=10)
     bridge = CvBridge()
     camera_info = CameraInfo()
-    
     rospy.init_node('light', anonymous=True)
     rate = rospy.Rate(10)
+
+    camera_info = CameraInfo()
+    camera_info.header.frame_id="mod_depth_frame"
+    camera_info.width = 640  
+    camera_info.height = 480 
+    camera_info.distortion_model = 'plumb_bob'
+    camera_info.K = [400.0, 0.0, 320.0, 0.0, 400.0, 240.0, 0.0, 0.0, 1.0]
+    camera_info.P = [400.0, 0.0, 320.0, 0.0, 0.0, 400.0, 240.0, 0.0, 0.0, 0.0, 1.0, 0.0]
 
     while True:
             # Wait for a coherent pair of frames: depth and color
@@ -97,6 +95,7 @@ if __name__ == "__main__":
             depth_frame = aligned_frames.get_depth_frame()
             color_frame = aligned_frames.get_color_frame()
             
+           
             if not depth_frame or not color_frame:
                 # # If there is no frame, probably camera not connected, return False
                 # print("Error, impossible to get the frame, make sure that the Intel Realsense camera is correctly connected")
@@ -115,7 +114,6 @@ if __name__ == "__main__":
             depth_colormap = np.asanyarray(colorizer.colorize(filled_depth).get_data())
             depth_image = np.asanyarray(filled_depth.get_data())
             color_image = np.asanyarray(color_frame.get_data())
-            camera_if()
             color=color_image
             depth_fr=depth_image
 
@@ -183,17 +181,17 @@ if __name__ == "__main__":
                             cv2.circle(color ,point_tr,4,(0,0,255)) 
                             cv2.circle(color ,point_bl,4,(0,0,255))
                             cv2.rectangle(color, (xA, yA), (xB, yB), (0, 255, 0), 2)
-            camera_info.header.stamp = rospy.Time.now()
+            
             cv2.imshow("YOLO color", color) 
             cv2.imshow("YOLO depth_fr", depth_image)
-            
             cv2.imshow("MOdified depth", mod) 
 
-            depth_image_message = bridge.cv2_to_imgmsg(depth_fr, encoding="passthrough")
-            # sti = np.hstack((color, depth_image,mod))
-            # cv2.imshow("MOdified depth", sti) 
+            #adding frame to the modified depth image
+            depth_image_message = bridge.cv2_to_imgmsg(mod, encoding="passthrough")
+            depth_image_message.header.frame_id = "mod_depth_frame"
+            depth_image_message.header.stamp=rospy.Time.now()
+            camera_info.header.stamp = rospy.Time.now()
 
-            # cv2.imshow("MOdified depth", mod_dep)
             hello_str = z_real % rospy.get_time()
             hello_str1 = width % rospy.get_time()
             rospy.loginfo(hello_str)
