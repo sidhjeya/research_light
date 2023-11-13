@@ -74,7 +74,7 @@ if __name__ == "__main__":
     pub = rospy.Publisher('chatter', String, queue_size=10)
     pub_width = rospy.Publisher('/t_chatter_width', String, queue_size=10) 
     depth_image_publisher = rospy.Publisher('/t_depth_image', Image, queue_size=10)   
-    camera_info_pub = rospy.Publisher('/t_camera_info', CameraInfo, queue_size=10)
+    camera_info_pub = rospy.Publisher('/bef_camera_info', CameraInfo, queue_size=10)
     bridge = CvBridge()
     camera_info = CameraInfo()
     rospy.init_node('light', anonymous=True)
